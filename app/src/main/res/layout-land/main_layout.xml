@@ -1,0 +1,151 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/manual_mode"
+        android:layout_marginTop="@dimen/no_dimens"
+        android:id="@+id/textView"
+        android:typeface="monospace"
+        android:layout_gravity="center_horizontal" />
+
+    <GridLayout
+        android:layout_height="@dimen/mode_table_height"
+        android:layout_width="@dimen/mode_table_width"
+        android:rowCount="1"
+        android:columnCount="3"
+        android:layout_marginTop="@dimen/no_dimens"
+        android:background="@color/blue"
+        android:layout_gravity="center">
+
+        <ImageView
+            android:id="@+id/vibro_mode"
+            android:layout_width="@dimen/mode_image_width"
+            android:layout_height="@dimen/mode_image_height"
+            android:layout_gravity="center"
+            android:layout_marginLeft="@dimen/left_and_right_image_margin"
+            android:background="@color/blue"
+            android:scaleType="center"
+            android:src="@drawable/vibration_off" />
+
+        <ImageView
+            android:id="@+id/flash_mode"
+            android:layout_width="@dimen/mode_image_width"
+            android:layout_height="@dimen/mode_image_height"
+            android:layout_gravity="fill"
+            android:layout_marginLeft="@dimen/center_image_margin"
+            android:background="@color/blue"
+            android:scaleType="center"
+            android:src="@drawable/flash_off" />
+
+        <ImageView
+            android:id="@+id/sound_mode"
+            android:layout_width="@dimen/mode_image_width"
+            android:layout_height="@dimen/mode_image_height"
+            android:layout_marginLeft="@dimen/left_and_right_image_margin"
+            android:layout_gravity="center"
+            android:background="@color/blue"
+            android:scaleType="center"
+            android:src="@drawable/sound_off" />
+    </GridLayout>
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/set_you_need_below"
+        android:layout_marginTop="@dimen/no_dimens"
+        android:layout_gravity="center"
+        android:id="@+id/other_text"/>
+
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:layout_gravity="center">
+
+        <EditText
+            android:layout_width="wrap_content"
+            android:layout_height="@dimen/height_edit_text"
+            android:ems="2"
+            android:textSize="@dimen/edit_text_size"
+            android:inputType="number"
+            android:id="@+id/bpm_edit" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textAppearance="?android:attr/textAppearanceLarge"
+            android:text="@string/bpm_str"
+            android:id="@+id/bpm"
+            android:typeface="monospace"
+            android:layout_marginTop="@dimen/margin_top_bpm_text"/>
+
+
+    </LinearLayout>
+
+    <com.rey.material.widget.Slider
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center"
+        android:id="@+id/bpm_slider"
+        app:sl_minValue="1"
+        app:sl_maxValue="150"
+        app:sl_value="100"
+        app:sl_primaryColor="@color/blue"
+        app:sl_secondaryColor="@color/blue"/>
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/no_dimens"
+        android:text="@string/indicator"
+        android:layout_gravity="center"
+        android:id="@+id/indicator_txt" />
+
+    <ImageView
+        android:id="@+id/imageView"
+        android:layout_width="@dimen/indicator_height_width"
+        android:layout_height="@dimen/indicator_height_width"
+        android:layout_marginTop = "@dimen/land_mode_indicator"
+        android:layout_gravity="center"
+        android:scaleType="center"
+        android:src="@drawable/circle" />
+
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:layout_marginTop = "@dimen/margin_top_btn"
+        android:layout_gravity="center">
+
+    <android.support.v7.widget.CardView
+        android:layout_height="@dimen/card_view_height"
+        android:layout_width="@dimen/card_view_width"
+        android:id="@+id/card_view_start">
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:background="@color/blue"/>
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/start"
+                android:textAppearance="?android:attr/textAppearanceLarge"
+                android:id="@+id/btn_start"
+                android:textColor="@color/white"
+                android:layout_gravity="center" />
+
+
+    </android.support.v7.widget.CardView>
+
+
+    </LinearLayout>
+
+</LinearLayout>
