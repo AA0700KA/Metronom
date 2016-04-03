@@ -2,6 +2,7 @@ package com.andrewbondarenko.metronom.domain;
 
 
 import android.content.Context;
+import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.hardware.Camera;
 import android.media.MediaPlayer;
@@ -10,7 +11,7 @@ import android.util.Log;
 
 import com.andrewbondarenko.metronom.R;
 import com.andrewbondarenko.metronom.activity.MainActivity;
-import com.andrewbondarenko.metronom.utils.PlayModeUtils;
+import com.andrewbondarenko.metronom.service.MetronomService;
 
 public class ProccessTact {
 
@@ -19,6 +20,10 @@ public class ProccessTact {
     private Context context;
     private Vibrator mVibrator;
     private MediaPlayer mediaPlayer;
+
+    public static final String STATUS = "status";
+    public static final String START = "start";
+    public static final String FINISH = "finish";
 
     public ProccessTact(Context context) {
         this.context = context;
@@ -52,7 +57,7 @@ public class ProccessTact {
     }
 
     public void proccesFlash() throws InterruptedException {
-        if (mCamera != null && PlayModeUtils.flash_pack) {
+        if (mCamera != null && MetronomService.flash_pack) {
 
             //Thread.currentThread().sleep(250);
             mParams.setFlashMode(Camera.Parameters.FLASH_MODE_TORCH);
@@ -66,7 +71,7 @@ public class ProccessTact {
     }
 
     public void proccessVibro() throws InterruptedException {
-       if (PlayModeUtils.vibro_pack)
+       if (MetronomService.vibro_pack)
         mVibrator.vibrate(50);
     }
 
@@ -81,11 +86,22 @@ public class ProccessTact {
         synchronized (this) {
             notifyAll();
         }
-        if (PlayModeUtils.sound_pack) {
+        if (MetronomService.sound_pack) {
             mediaPlayer.start();
         }
     }
 
+    public void proccessIndicator() throws InterruptedException {
+        Intent intent = new Intent(MainActivity.BROADCAST_ACTION);
+
+        intent.putExtra(STATUS, START);
+        context.sendBroadcast(intent);
+
+        Thread.sleep(50);
+
+        intent.putExtra(STATUS, FINISH);
+        context.sendBroadcast(intent);
+    }
     public void releaseAudio() {
         Log.i("Relise", "Relise Audio");
         mediaPlayer.release();

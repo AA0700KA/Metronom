@@ -109,7 +109,7 @@
         android:id="@+id/indicator_txt" />
 
     <ImageView
-        android:id="@+id/imageView"
+        android:id="@+id/indicator"
         android:layout_width="@dimen/indicator_height_width"
         android:layout_height="@dimen/indicator_height_width"
         android:layout_marginTop = "@dimen/port_mode_indicator"

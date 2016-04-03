@@ -3,11 +3,11 @@ package com.andrewbondarenko.metronom.service;
 import android.app.Service;
 import android.content.Intent;
 import android.os.IBinder;
-import android.os.Vibrator;
 import android.util.Log;
 
+import com.andrewbondarenko.metronom.R;
+import com.andrewbondarenko.metronom.activity.MainActivity;
 import com.andrewbondarenko.metronom.domain.ProccessTact;
-import com.andrewbondarenko.metronom.utils.PlayModeUtils;
 
 
 public class MetronomService extends Service {
@@ -15,6 +15,13 @@ public class MetronomService extends Service {
     private boolean proccess;
     private ProccessTact tact;
 
+    public static boolean vibro_pack = false;
+    public static boolean flash_pack= false;
+    public static boolean sound_pack = false;
+
+    private final String SPEED_BPM = "Time";
+    public static int startId = 1;
+    public static int statusButton = R.string.start;
 
     @Override
     public IBinder onBind(Intent intent) {
@@ -68,43 +75,64 @@ public class MetronomService extends Service {
         });
     }
 
+    private Thread activityIndicatorThread() {
+        return new Thread(new Runnable() {
+            @Override
+            public void run() {
+                while (proccess) {
+                        try {
+                            synchronized (tact) {
+                                tact.wait();
+                            }
+                            tact.proccessIndicator();
+                        } catch (InterruptedException e) {
+                            e.printStackTrace();
+                        }
+                }
+            }
+        });
+    }
+
+    private Thread mainIndicatorThread(double tactBpm) {
+
+        double result =   1000 / (tactBpm / 60);
+        final long interval = (long) result;
+
+        return new Thread(new Runnable() {
+            @Override
+            public void run() {
+                while (proccess) {
+
+                    try {
+                        tact.proccessAudio();
+                        Thread.sleep(interval);
+                    } catch (InterruptedException e) {
+                        e.printStackTrace();
+                    }
+
+                }
+                synchronized (tact) {
+                    tact.notifyAll();
+                }
+
+
+            }
+        });
+    }
+
     private void gameOver() {
         proccess = false;
     }
 
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
-        if (startId == 1) {
-            double tactBpm = Double.valueOf(intent.getStringExtra(PlayModeUtils.SPEED_BPM));
-            Log.i("Tact speed", "tact - " + tactBpm);
-            double result =   1000 / (tactBpm / 60);
-            Log.i("Tact speed", "Result - " + result);
-            final long interval = (long) result;
+
+            double tactBpm = intent.getDoubleExtra(SPEED_BPM, 0);
+
             vibrationThread().start();
             flashThread().start();
-            new Thread(new Runnable() {
-                @Override
-                public void run() {
-                    while (proccess && (PlayModeUtils.sound_pack || PlayModeUtils.flash_pack || PlayModeUtils.vibro_pack)) {
-
-                        try {
-                            tact.proccessAudio();
-                            Thread.sleep(interval);
-                        } catch (InterruptedException e) {
-                            e.printStackTrace();
-                        }
-
-                    }
-                    synchronized (tact) {
-                        tact.notifyAll();
-                    }
-                    stopSelf();
-
-                }
-            }).start();
-        } else {
-            stopSelf();
-        }
+            activityIndicatorThread().start();
+            mainIndicatorThread(tactBpm).start();
 
         return START_STICKY;
     }
